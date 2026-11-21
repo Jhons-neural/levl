@@ -50,7 +50,7 @@ function viewState() {
     look: s.look, opacity: s.opacity, showLabel: s.showLabel, length: s.length, clickThrough: s.clickThrough,
     locked: s.locked, orientation: s.pos?.orientation ?? 'h', version: app.getVersion(),
     settings: { ...s, samples: undefined, alertMemory: undefined, pos: undefined },
-    insights: usageRows.length ? computeInsights(usageRows, state.limits, now) : null,
+    insights: process.env.LEVL_DEMO ? DEMO_INSIGHTS : usageRows.length ? computeInsights(usageRows, state.limits, now) : null,
     analysisRunning,
   };
 }
@@ -91,11 +91,16 @@ function fmtReset(iso) {
   return d.toDateString() === today.toDateString() ? hm : `${d.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '')} ${hm}`;
 }
 
-// dev-only (LEVL_DEMO): fixed sample numbers for screenshots, no network.
+// dev-only (LEVL_DEMO): fixed sample numbers for screenshots, no network, no real project names.
+const DEMO_INSIGHTS = {
+  windowStart: 0, weekUsedPct: 42, week: { deltaPct: 18 }, day: { deltaPct: 35 },
+  top: [{ project: 'app-da-loja', pct: 46 }, { project: 'site-cliente', pct: 24 }, { project: 'automacoes', pct: 15 }, { project: 'estudos', pct: 9 }, { project: 'Outros', pct: 6 }],
+  tips: ['Conversas muito longas em app-da-loja (412k): use /clear ou /compact entre tarefas.', '72% do consumo foi no Opus: use o Sonnet para tarefas simples.'],
+};
 function demoUsage() {
   const now = Date.now(), H = 3_600_000, iso = (t) => new Date(Math.round(t / 60_000) * 60_000).toISOString();
   return { ok: true, plan: 'Pro', at: now, limits: [
-    { id: 'five_hour', label: '5 horas', remaining: 64, resetsAt: iso(now + 3.4 * H), demoForecast: { lasts: true } },
+    { id: 'five_hour', label: '5 horas', remaining: Number(process.env.LEVL_DEMO_PCT ?? 64), resetsAt: iso(now + 3.4 * H), demoForecast: { lasts: true } },
     { id: 'seven_day', label: 'semana', remaining: 58, resetsAt: iso(now + 110 * H), demoForecast: { lasts: false, endsAt: now + 94 * H } },
   ] };
 }
@@ -261,7 +266,9 @@ function resizeMeter() {
 }
 
 // ---------- popup ----------
-const POPUP = { width: 340, height: 312 };
+// Fixed, compact panel: only the meter grows with "Tamanho"; the popup never does.
+const POPUP_ZOOM = 0.82;
+const POPUP = { width: Math.round(340 * POPUP_ZOOM), height: Math.round(312 * POPUP_ZOOM) };
 function popupBounds() {
   const m = meter.getBounds();
   const wa = screen.getDisplayMatching(m).workArea;
@@ -285,7 +292,7 @@ function togglePopup() {
     ...popupBounds(),
     frame: false, transparent: true, resizable: false, skipTaskbar: true, hasShadow: false,
     alwaysOnTop: true, show: false, backgroundColor: '#00000000', backgroundMaterial: 'acrylic', roundedCorners: true,
-    webPreferences: { preload: R('src', 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true },
+    webPreferences: { preload: R('src', 'preload.cjs'), contextIsolation: true, nodeIntegration: false, sandbox: true, zoomFactor: POPUP_ZOOM },
   });
   popup.loadFile(R('src', 'renderer', 'popup.html'));
   popup.once('ready-to-show', () => { popup.show(); popup.focus(); });
@@ -390,7 +397,7 @@ function wireIpc() {
   ipcMain.handle('check-update', () => checkForUpdates());
   ipcMain.on('open-leitor', openLeitor);
   ipcMain.handle('analysis-run', () => analyze());
-  ipcMain.handle('analysis-last', () => readJson('analysis.json', null));
+  ipcMain.handle('analysis-last', () => (process.env.LEVL_DEMO ? null : readJson('analysis.json', null)));
   ipcMain.on('open-link', (_e, url) => { if (String(url).startsWith('https://')) shell.openExternal(url); });
 }
 
@@ -407,6 +414,7 @@ app.on('will-quit', () => globalShortcut.unregisterAll());
 if (primary) app.whenReady().then(() => {
   dataDir = app.getPath('userData');
   s = loadSettings(dataDir);
+  if (process.env.LEVL_LOOK) s = { ...s, look: process.env.LEVL_LOOK }; // dev-only: preview a look without saving it
   wireIpc();
   createMeter();
   const img = nativeImage.createFromPath(R('assets', 'tray.png'));
@@ -424,7 +432,8 @@ if (primary) app.whenReady().then(() => {
   if (open) setTimeout(open, 2500);
   if (process.env.LEVL_SHOTS) { // dev-only: save meter + popup images (with alpha) for README art
     const save = async (w, name) => writeFileSync(join(process.env.LEVL_SHOTS, name), (await w.webContents.capturePage()).toPNG());
-    setTimeout(async () => { await save(meter, 'meter.png'); togglePopup(); }, 5000);
-    setTimeout(async () => { await save(popup, 'popup.png'); app.quit(); }, 7500);
+    setTimeout(async () => { await save(meter, `meter-${s.look}.png`); togglePopup(); }, 5000);
+    setTimeout(async () => { await save(popup, `popup-${s.look}.png`); openLeitor(); }, 7500);
+    setTimeout(async () => { await save(leitorWin, `leitor-${s.look}.png`); app.quit(); }, 11000);
   }
 });

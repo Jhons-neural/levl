@@ -34,7 +34,8 @@ test('values are clamped and enums validated', () => {
   assert.equal(s.opacity, 0.3);
   assert.equal(s.length, 420);
   assert.equal(s.look, 'linha');
-  assert.equal(saveSettings(d, { length: 50, opacity: 5 }).length, 120);
+  assert.equal(saveSettings(d, { length: 50, opacity: 5 }).length, 60);
+  assert.equal(loadSettings(fresh()).length, 100, 'small meter by default');
   assert.equal(loadSettings(d).opacity, 1);
 });
 test('save is atomic (no temp file left behind)', () => {

@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, renameSync, existsSync, rmSync } from 'nod
 import { join } from 'node:path';
 
 export const DEFAULTS = Object.freeze({
-  look: 'linha', opacity: 1, length: 240, showLabel: true, onTop: true, clickThrough: false,
+  look: 'linha', opacity: 1, length: 100, showLabel: true, onTop: true, clickThrough: false,
   locked: false, alertLow: true, alertRefill: true, autostart: true,
   hotkey: 'Control+Alt+L', clickHotkey: 'Control+Alt+K',
   pos: null, alertMemory: {}, samples: {},
@@ -16,7 +16,7 @@ function sanitize(raw) {
   const s = { ...DEFAULTS };
   for (const k of Object.keys(DEFAULTS)) if (raw?.[k] !== undefined) s[k] = raw[k];
   s.opacity = clamp(s.opacity, 0.3, 1, DEFAULTS.opacity);
-  s.length = Math.round(clamp(s.length, 120, 420, DEFAULTS.length));
+  s.length = Math.round(clamp(s.length, 60, 420, DEFAULTS.length));
   if (!LOOKS.includes(s.look)) s.look = DEFAULTS.look;
   s.digestHour = Math.round(clamp(s.digestHour, 0, 23, DEFAULTS.digestHour));
   if (!['sonnet', 'opus'].includes(s.analysisModel)) s.analysisModel = DEFAULTS.analysisModel;
