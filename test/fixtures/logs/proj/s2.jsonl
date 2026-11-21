@@ -1,0 +1,1 @@
+{"type":"assistant","sessionId":"s2","cwd":"C:\\Projetos\\BETA-APP","requestId":"x1","timestamp":"2026-11-17T09:00:00.000Z","message":{"id":"x1","model":"claude-haiku-5-5","content":[],"usage":{"input_tokens":1000,"cache_creation_input_tokens":0,"cache_read_input_tokens":0,"output_tokens":0}}}

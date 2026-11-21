@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:">
+<title>Levl</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="themes.css">
+<link rel="stylesheet" href="popup.css">
+</head>
+<body class="look-linha">
+  <main class="panel rise" id="panel" tabindex="-1" aria-label="Consumo do Claude">
+    <header>
+      <img src="../../assets/levl.svg" alt="" width="18" height="18">
+      <b>Levl</b>
+      <span class="chip mono" id="plan"></span>
+      <span class="ago soft" id="ago"></span>
+    </header>
+    <section class="pair" id="pair"></section>
+    <p class="extra soft mono" id="extra" hidden></p>
+    <div class="insight" id="insight"></div>
+    <footer>
+      <span class="soft mono" id="version"></span>
+      <button class="link" id="update" title="Instala a nova versão e reabre o Levl" hidden>Atualizar</button>
+      <button class="leitorBtn lens" id="leitor">Abrir Leitor</button>
+      <button class="gear" id="gear" aria-label="Configurações" title="Configurações">
+        <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z"/><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" d="M19.4 13.5a7.6 7.6 0 0 0 0-3l2-1.6-2-3.4-2.4.9a7.6 7.6 0 0 0-2.6-1.5L14 2h-4l-.4 2.9A7.6 7.6 0 0 0 7 6.4l-2.4-.9-2 3.4 2 1.6a7.6 7.6 0 0 0 0 3l-2 1.6 2 3.4 2.4-.9a7.6 7.6 0 0 0 2.6 1.5L10 22h4l.4-2.9a7.6 7.6 0 0 0 2.6-1.5l2.4.9 2-3.4-2-1.6Z"/></svg>
+      </button>
+    </footer>
+  </main>
+  <template id="meterTpl">
+    <article class="card">
+      <div class="top">
+        <div class="tube v" role="meter" aria-valuemin="0" aria-valuemax="100">
+          <div class="bulb"></div>
+          <div class="glass"><div class="fill"></div><div class="shine"></div></div>
+        </div>
+        <div class="head">
+          <div class="k mono"></div>
+          <div class="p"></div>
+        </div>
+      </div>
+      <dl></dl>
+    </article>
+  </template>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

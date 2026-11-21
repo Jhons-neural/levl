@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:">
+<title>Levl</title>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="themes.css">
+<link rel="stylesheet" href="meter.css">
+</head>
+<body class="look-linha o-h">
+  <div class="wrap">
+    <div class="hit" id="hit" tabindex="0" role="meter" aria-valuemin="0" aria-valuemax="100" aria-label="Levl · limite de 5 horas">
+      <div class="tube h" id="tube">
+        <div class="bulb"><span class="dot"></span></div>
+        <div class="glass" id="glass"><div class="fill" id="fill"></div><div class="shine"></div></div>
+      </div>
+      <span class="lbl mono" id="lbl">—</span>
+    </div>
+  </div>
+  <script type="module" src="meter.js"></script>
+</body>
+</html>

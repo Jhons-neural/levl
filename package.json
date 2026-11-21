@@ -1,0 +1,63 @@
+{
+  "name": "levl",
+  "productName": "Levl",
+  "version": "1.1.4",
+  "description": "Levl — medidor de consumo de apps na área de trabalho",
+  "author": "JHON",
+  "type": "module",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test",
+    "icons": "node scripts/make-icons.mjs",
+    "dist": "electron-builder --win"
+  },
+  "devDependencies": {
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0",
+    "sharp": "^0.35.5"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/inter-tight": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "electron-updater": "^6.8.11"
+  },
+  "allowScripts": {
+    "electron-winstaller": false
+  },
+  "build": {
+    "appId": "com.jhon.levl",
+    "productName": "Levl",
+    "copyright": "by JHON",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "shortcutName": "Levl",
+      "createDesktopShortcut": false,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true,
+      "artifactName": "Levl-Setup-${version}.${ext}"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Jhons-neural",
+      "repo": "levl-releases",
+      "releaseType": "release"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+.wrap { position: fixed; inset: 0; display: flex; align-items: center; justify-content: flex-start; padding: 0 6px; }
+.o-v .wrap { flex-direction: column-reverse; justify-content: flex-start; padding: 6px 0; }
+.hit { background: rgba(8, 8, 8, .012); display: flex; align-items: center; gap: 6px; cursor: grab; outline-offset: 3px; border-radius: 99px; padding: 4px; }
+.o-v .hit { flex-direction: column-reverse; }
+.locked .hit { cursor: pointer; }
+.hit:active { cursor: grabbing; }
+.lbl { font-size: 11px; font-weight: 500; min-width: 3ch; }
+.nolabel .lbl { display: none; }
+.out .lbl { color: #FF5A4E; font-size: 10px; letter-spacing: .02em; }
+.o-v.out .lbl { writing-mode: vertical-rl; transform: rotate(180deg); }
