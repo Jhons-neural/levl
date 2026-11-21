@@ -66,6 +66,14 @@ O Levl resolve isso deixando o seu consumo **sempre à vista**, como o marcador 
 | ⌨️ **Atalhos** | `Ctrl+Alt+L` mostra e esconde. `Ctrl+Alt+K` deixa o clique atravessar o tubo. |
 | ⬆️ **Atualiza sozinho** | Quando sai uma versão nova, aparece **"Atualizar"** no painel: um clique e pronto. |
 
+### Três visuais para escolher
+
+Troque a qualquer momento em ⚙️ **Configurações → Visual**. A transparência e o tamanho também se ajustam ali.
+
+<p align="center">
+  <img src="docs/img/temas.png" width="880" alt="Os três visuais do Levl: Linha, Grafite e Névoa">
+</p>
+
 ## 3. Como funciona por dentro
 
 ```mermaid
