@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/img/painel.png" width="640" alt="Painel do Levl mostrando 60% do limite de 5 horas e 24% da semana">
+  <img src="docs/img/capa.png" width="800" alt="O termômetro do Levl na área de trabalho, com 64% do limite de 5 horas">
 </p>
 
 ---
@@ -47,6 +47,11 @@ O Levl resolve isso deixando o seu consumo **sempre à vista**, como o marcador 
 **Objetivo:** usar o plano do Claude com controle. Nada de ser pego de surpresa e nada de deixar limite sobrando sem saber.
 
 ## 2. O que ele faz
+
+<p align="center">
+  <img src="docs/img/aberto.png" width="720" alt="Ao clicar no termômetro, abre o painel com os limites de 5 horas e da semana">
+  <br><sub>Clicou no termômetro, abriu o painel.</sub>
+</p>
 
 | Recurso | O que é |
 |---|---|

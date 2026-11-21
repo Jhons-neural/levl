@@ -43,7 +43,7 @@ function viewState() {
   const limits = state.limits.map((l) => {
     const pts = s.samples[l.id]?.points ?? [];
     const win = l.id === 'five_hour' ? 30 * MIN : 24 * 60 * MIN;
-    return { ...l, forecast: l.resetsAt ? forecast(pts, Date.parse(l.resetsAt), now, win) : null };
+    return { ...l, forecast: l.demoForecast ?? (l.resetsAt ? forecast(pts, Date.parse(l.resetsAt), now, win) : null) };
   });
   return {
     ...state, limits, now,
@@ -91,17 +91,27 @@ function fmtReset(iso) {
   return d.toDateString() === today.toDateString() ? hm : `${d.toLocaleDateString('pt-BR', { weekday: 'short' }).replace('.', '')} ${hm}`;
 }
 
+// dev-only (LEVL_DEMO): fixed sample numbers for screenshots, no network.
+function demoUsage() {
+  const now = Date.now(), H = 3_600_000, iso = (t) => new Date(Math.round(t / 60_000) * 60_000).toISOString();
+  return { ok: true, plan: 'Pro', at: now, limits: [
+    { id: 'five_hour', label: '5 horas', remaining: 64, resetsAt: iso(now + 3.4 * H), demoForecast: { lasts: true } },
+    { id: 'seven_day', label: 'semana', remaining: 58, resetsAt: iso(now + 110 * H), demoForecast: { lasts: false, endsAt: now + 94 * H } },
+  ] };
+}
+
 // One poll at a time; always reschedules, even if something inside throws.
 const poll = serial(async () => {
   clearTimeout(pollTimer);
   lastPoll = Date.now();
   try {
     const fake = Number(process.env.LEVL_FAKE);
-    const r = await fetchClaude({ credentialsPath: CRED });
+    const r = process.env.LEVL_DEMO ? demoUsage() : await fetchClaude({ credentialsPath: CRED });
     if (r.ok && !Number.isNaN(fake) && process.env.LEVL_FAKE) r.limits[0].remaining = fake; // dev-only override
     if (r.ok) {
       errors = 0;
       Object.assign(state, { ok: true, stale: false, reason: null, plan: r.plan, limits: r.limits, at: r.at });
+      if (process.env.LEVL_DEMO) return; // demo numbers never touch saved samples or alerts
       recordSamples(r.limits, r.at);
       runAlerts(r.limits);
       runDigest();
@@ -412,4 +422,9 @@ if (primary) app.whenReady().then(() => {
   setInterval(scanUsage, SCAN_MS);
   const open = { popup: togglePopup, leitor: openLeitor, settings: openSettings }[process.env.LEVL_OPEN]; // dev-only: open a window for visual checks
   if (open) setTimeout(open, 2500);
+  if (process.env.LEVL_SHOTS) { // dev-only: save meter + popup images (with alpha) for README art
+    const save = async (w, name) => writeFileSync(join(process.env.LEVL_SHOTS, name), (await w.webContents.capturePage()).toPNG());
+    setTimeout(async () => { await save(meter, 'meter.png'); togglePopup(); }, 5000);
+    setTimeout(async () => { await save(popup, 'popup.png'); app.quit(); }, 7500);
+  }
 });
